@@ -39,8 +39,8 @@ public class BeerDto {
     @NotNull
     private BeerStyle beerStyle;
 
-    @Positive
-    private Long upc;
+    private String upc;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Positive
     @NotNull
