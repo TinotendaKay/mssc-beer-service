@@ -26,10 +26,21 @@ public class BeerServiceImpl implements BeerService {
     private final BeerMapper mapper;
 
     @Override
-    public BeerDto getById(UUID beerId) {
+    public BeerDto getById(UUID beerId, Boolean showInventoryOnHand) {
 
-        return mapper.beerToBeerDto(
-                beerRepository.findById(beerId).orElseThrow(() -> new NotFoundException()));
+        BeerDto beerDto;
+
+        if (showInventoryOnHand) {
+            beerDto = mapper.beerToBeerDto(
+                    beerRepository.findById(beerId).orElseThrow(() -> new NotFoundException()));
+
+        } else {
+            beerDto = mapper.beerToBeerDtoNoInventory(
+                    beerRepository.findById(beerId).orElseThrow(() -> new NotFoundException()));
+        }
+
+
+        return beerDto;
     }
 
     @Override
@@ -51,33 +62,42 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public BeerPageList listBeers(String beerName, BeerStyle beerStyle, PageRequest pageRequest) {
+    public BeerPageList listBeers(String beerName, BeerStyle beerStyle, Boolean showInventoryOnHand, PageRequest pageRequest) {
         BeerPageList beerPageList;
         Page<Beer> beerPage;
 
         if (!StringUtils.isEmpty(beerName) && !StringUtils.isEmpty(beerStyle)) {
             beerPage = beerRepository.findAllByBeerNameAndBeerStyle(beerName, beerStyle, pageRequest);
-            log.debug("************** FINDING Beer name and Style******************8");
         } else if (!StringUtils.isEmpty(beerName) && StringUtils.isEmpty(beerStyle)) {
-            log.debug("************** FINDING Beer Name******************8");
             beerPage = beerRepository.findAllByBeerName(beerName, pageRequest);
         } else if (StringUtils.isEmpty(beerName) && !StringUtils.isEmpty(beerStyle)) {
-            log.debug("************** FINDING Beer Style******************8");
             beerPage = beerRepository.findAllByBeerStyle(beerStyle, pageRequest);
         } else {
-            log.debug("************** FINDING ALL BEERS******************8");
             beerPage = beerRepository.findAll(pageRequest);
         }
 
-        beerPageList = new BeerPageList(beerPage
-                .getContent()
-                .stream()
-                .map(mapper::beerToBeerDto)
-                .collect(Collectors.toList()),
-                PageRequest
-                        .of(beerPage.getPageable().getPageNumber(),
-                                beerPage.getPageable().getPageSize()),
-                beerPage.getTotalElements());
+        if (showInventoryOnHand) {
+            beerPageList = new BeerPageList(beerPage
+                    .getContent()
+                    .stream()
+                    .map(mapper::beerToBeerDto)
+                    .collect(Collectors.toList()),
+                    PageRequest
+                            .of(beerPage.getPageable().getPageNumber(),
+                                    beerPage.getPageable().getPageSize()),
+                    beerPage.getTotalElements());
+        } else {
+            beerPageList = new BeerPageList(beerPage
+                    .getContent()
+                    .stream()
+                    .map(mapper::beerToBeerDtoNoInventory)
+                    .collect(Collectors.toList()),
+                    PageRequest
+                            .of(beerPage.getPageable().getPageNumber(),
+                                    beerPage.getPageable().getPageSize()),
+                    beerPage.getTotalElements());
+        }
+
 
         return beerPageList;
     }
