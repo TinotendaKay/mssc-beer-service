@@ -62,6 +62,7 @@ public class BeerServiceImpl implements BeerService {
 
         return mapper.beerToBeerDto(beerRepository.save(beer));
     }
+
     @Cacheable(cacheNames = "beerListCache", condition = "#showInventoryOnHand==false")
     @Override
     public BeerPageList listBeers(String beerName, BeerStyle beerStyle, Boolean showInventoryOnHand, PageRequest pageRequest) {
@@ -103,4 +104,13 @@ public class BeerServiceImpl implements BeerService {
 
         return beerPageList;
     }
+
+    @Override
+    @Cacheable(cacheNames = "beerUpcCache", key = "#upc")
+    public BeerDto getByUpc(String upc) {
+
+        return mapper.beerToBeerDtoNoInventory(
+                beerRepository.findByUpc(upc).orElseThrow(() -> new NotFoundException()));
+    }
+
 }
