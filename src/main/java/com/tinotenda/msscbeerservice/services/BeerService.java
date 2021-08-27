@@ -1,6 +1,9 @@
 package com.tinotenda.msscbeerservice.services;
 
 import com.tinotenda.msscbeerservice.web.model.BeerDto;
+import com.tinotenda.msscbeerservice.web.model.BeerPageList;
+import com.tinotenda.msscbeerservice.web.model.BeerStyle;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.UUID;
 
@@ -10,4 +13,6 @@ public interface BeerService {
     BeerDto saveNewBeer(BeerDto beerDto);
 
     BeerDto updateBeer(BeerDto beerDto, UUID beerId);
+
+    BeerPageList listBeers(String beerName, BeerStyle beerStyle, PageRequest of);
 }
