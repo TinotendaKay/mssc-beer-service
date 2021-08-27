@@ -9,6 +9,7 @@ import com.tinotenda.msscbeerservice.web.model.BeerPageList;
 import com.tinotenda.msscbeerservice.web.model.BeerStyle;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class BeerServiceImpl implements BeerService {
     private final BeerRepository beerRepository;
     private final BeerMapper mapper;
 
+    @Cacheable(cacheNames = "beerCache", key = "#beerId", condition = "#showInventoryOnHand==false")
     @Override
     public BeerDto getById(UUID beerId, Boolean showInventoryOnHand) {
 
@@ -60,7 +62,7 @@ public class BeerServiceImpl implements BeerService {
 
         return mapper.beerToBeerDto(beerRepository.save(beer));
     }
-
+    @Cacheable(cacheNames = "beerListCache", condition = "#showInventoryOnHand==false")
     @Override
     public BeerPageList listBeers(String beerName, BeerStyle beerStyle, Boolean showInventoryOnHand, PageRequest pageRequest) {
         BeerPageList beerPageList;
