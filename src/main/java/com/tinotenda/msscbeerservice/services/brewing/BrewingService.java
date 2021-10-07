@@ -1,4 +1,4 @@
-package com.tinotenda.msscbeerservice.services;
+package com.tinotenda.msscbeerservice.services.brewing;
 
 import com.tinotenda.msscbeerservice.config.JmsConfig;
 import com.tinotenda.msscbeerservice.domain.Beer;
