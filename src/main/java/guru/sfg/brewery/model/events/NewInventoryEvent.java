@@ -1,7 +1,6 @@
-package guru.sfg.common.events;
+package guru.sfg.brewery.model.events;
 
-import guru.sfg.msscbeerservice.events.BeerEvent;
-import guru.sfg.msscbeerservice.web.model.BeerDto;
+import guru.sfg.brewery.model.BeerDto;
 
 public class NewInventoryEvent extends BeerEvent {
     public NewInventoryEvent(BeerDto beerDto) {

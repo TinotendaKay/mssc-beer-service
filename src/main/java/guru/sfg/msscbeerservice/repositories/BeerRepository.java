@@ -1,7 +1,7 @@
 package guru.sfg.msscbeerservice.repositories;
 
 import guru.sfg.msscbeerservice.domain.Beer;
-import guru.sfg.msscbeerservice.web.model.BeerStyle;
+import guru.sfg.brewery.model.BeerStyle;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
